@@ -1,0 +1,143 @@
+$ git clone https://github.com/sangameshpatil456/LoginModelApplication.git
+$ git status
+$ git branch -a
+$ git checkout <branch-name>
+<--To checkout different branch.-->
+$ git checkout -b <branch-name>
+<--This creates a new branch new-branch-->
+$ git checkout -b new-branch existing-branch ( create new branch using existing branch )
+<--This creates a new branch new-branch, based on existing-branch.-->
+$ git status
+$ git add <specific-file-name> or git add . (add all)
+$ git status
+$ git commit -m "Add your comments"
+$ git push origin <branch-name>
+
+$ git pull orgin deployement
+
+----------------------------------------------------------------------------------------------
+Dockerfile: [for JAR file]
+
+FROM openjdk:8-jdk-alpine
+MAINTAINER sangamesh Patil
+COPY target/login-model.jar login-model.jar  [Docker copy our jar file into the image]
+ENTRYPOINT ["java","-jar","/login-model.jar"]
+
+$> docker build --tag=login-model .
+$> docker rmi login-model
+$> docker run -p 8083:8080 login-model
+$> docker inspect login-model
+$> docker stop/start login-model
+$> docker rm login-model
+
+docker-compose.yml
+
+version: '2'
+services:
+    login-model:
+        container_name: login-model
+        build:
+            context: docker-login-model
+            dockerfile: Dockerfile
+        image: login-model
+        ports:
+            - 18888:8888
+        networks:
+            - spring-cloud-network
+            
+    new-docker-image:
+        container_name: new-docker-image
+        build:
+            context: docker-new-docker-image
+            dockerfile: Dockerfile
+        image: new-docker-image
+        ports:
+            - 19999:9999
+        networks:
+            - spring-cloud-network
+networks:
+    spring-cloud-network:
+        driver: bridge
+		
+version: Specifies which format version should be used. This is a mandatory field.
+services: Each object in this key defines a service, a.k.a container. This section is mandatory.
+	build: If given, docker-compose is able to build an image from a Dockerfile
+			context: If given, it specifies the build-directory, where the Dockerfile is looked-up.
+			dockerfile: If given, it sets an alternate name for a Dockerfile.
+	image: Tells Docker which name it should give to the image when build-features are used. Otherwise, 
+		   it is searching for this image in the library or remote-registry.
+	networks: This is the identifier of the named networks to use. A given name-value must be listed in the networks section.
+networks: In this section, we're specifying the networks available to our services. In this example, 
+we let docker-compose create a named network of type ‘bridge' for us. 
+If the option external is set to true, it will use an existing one with the given name.
+
+$> docker-compose config
+$> docker-compose up --build
+$> docker-compose down
+----------------------------------------------------------------------------------------------
+
+Dockerfile: [for WAR file]
+
+FROM tomcat:latest
+MAINTAINER sangamesh Patil
+ADD target/sample.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+        
+version: '3'
+services:
+  login-model:
+    build: .
+    image: test-img
+    ports:
+      - 8080:8080
+
+----------------------------------------------------
+
+https://www.callicoder.com/spring-boot-mysql-react-docker-compose-example/
+
+https://turkogluc.com/run-react-and-spring-docker-compose/
+
+https://dzone.com/articles/docker-with-spring-boot-and-mysql-docker-compose-p
+
+https://www.javainuse.com/devOps/docker/docker-mysql
+
+FROM tomcat:8-jre8
+ADD ensys-service.war /usr/local/tomcat/webapps/
+
+
+65.0.204.128
+65.0.204.128
+
+https://ec2-65-0-204-128.ap-south-1.compute.amazonaws.com:8080/login-service/testing
+
+
+https://hub.docker.com/_/mysql
+
+sudo docker pull mysql:5.6
+sudo docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.6
+
+sudo docker exec -it mysql bash
+
+SELECT * FROM mysql.user;
+
+
+sudo docker run -d  --name login-service -p 8080:8080  login-service
+
+$> docker-compose config
+$> docker-compose up --build
+$> docker-compose down
+
+
+--------------------------------------------
+
+https://hub.docker.com/_/mysql
+
+sudo docker pull mysql:5.6
+sudo docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.6
+
+sudo docker exec -it mysql bash
+
+SELECT * FROM mysql.user;
+
+sudo docker run -d  --name login-service -p 8080:8080  login-service
