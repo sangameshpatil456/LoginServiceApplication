@@ -29,7 +29,7 @@ public class LoginController {
 	@Autowired
 	private TokenGenerators jwtTokenGenerator;
 
-	@PostMapping(value="/login")
+	@PostMapping(value="login")
 	public ResponseEntity<LoginResponse<Model>> loginUser(@RequestBody LoginBean loginBean) {
 		Model model = new Model();
 		if (loginBean != null) {
