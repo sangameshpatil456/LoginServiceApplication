@@ -11,14 +11,6 @@ public class Model {
 		data.put(key, value);
 	}
 
-	public Map<String, Object> asMap() {
-		return this.data;
-	}
-
-	public Map<String, Object> asString() {
-		return this.data;
-	}
-
 	public Map<String, Object> getData() {
 		return data;
 	}
@@ -26,5 +18,4 @@ public class Model {
 	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
-	
 }

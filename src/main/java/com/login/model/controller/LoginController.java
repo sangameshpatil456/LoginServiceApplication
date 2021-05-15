@@ -1,5 +1,6 @@
 package com.login.model.controller;
 
+import com.login.model.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class LoginController {
 		if (loginBean != null) {
 			UserBean userBean = userService.getUserByEmail(loginBean.getUserEmail());
 			if (userBean.getUserId() == null) {
-				model.addAttribute("error", "User Not Found");
+				model.addAttribute(Constants.ERROR, "User Not Found");
 				return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.NOT_FOUND);
 			}
 			String token = jwtTokenGenerator.getJWTToken(userBean.getUserId(), userBean.getUserName(),userBean.getUserEmail());

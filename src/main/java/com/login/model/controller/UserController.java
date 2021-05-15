@@ -32,11 +32,13 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	private static final String USER_Bean = "userBean";
+
 	@GetMapping
 	public ResponseEntity<LoginResponse<Model>> getUser() {
 		Model model = new Model();
 		List<UserBean> userBean = userService.getUser();
-		model.addAttribute("userBean", userBean);
+		model.addAttribute(USER_Bean, userBean);
 		return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.OK);
 	}
 
@@ -44,7 +46,7 @@ public class UserController {
 	public ResponseEntity<LoginResponse<Model>> getUserById(@PathVariable(name = "userID") long userID) {
 		Model model = new Model();
 		UserBean userBean = userService.getUserById(userID);
-		model.addAttribute("userBean", userBean);
+		model.addAttribute(USER_Bean, userBean);
 		return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.OK);
 	}
 
@@ -66,7 +68,7 @@ public class UserController {
 	public ResponseEntity<LoginResponse<Model>> deleteUserById(@PathVariable(name = "userID") long userID) {
 		Model model = new Model();
 		UserBean userBean = userService.deleteUserById(userID);
-		model.addAttribute("userBean", userBean);
+		model.addAttribute(USER_Bean, userBean);
 		return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.OK);
 	}
 }

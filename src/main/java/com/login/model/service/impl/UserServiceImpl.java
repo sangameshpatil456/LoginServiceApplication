@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserBean> getUser() {
-		return (List<UserBean>) userDao.getUser();
+		return userDao.getUser();
 	}
 
 	@Override
@@ -26,13 +26,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserBean saveUser(UserBean userBean) {
-		return userDao.saveUser(userBean);
+	public void saveUser(UserBean userBean) {
+		userDao.saveUser(userBean);
 	}
 
 	@Override
-	public UserBean updateUser(UserBean userBean) {
-		return userDao.updateUser(userBean);
+	public void updateUser(UserBean userBean) {
+		userDao.updateUser(userBean);
 	}
 
 	@Override
