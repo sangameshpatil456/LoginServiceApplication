@@ -6,16 +6,16 @@ import com.login.model.bean.UserBean;
 
 public interface UserService {
 
-	public List<UserBean> getUser();
+	List<UserBean> getUser();
 
-	public UserBean getUserById(long userID);
+	UserBean getUserById(long userID);
 
-	public UserBean saveUser(UserBean userBean);
+	void saveUser(UserBean userBean);
 
-	public UserBean updateUser(UserBean userBean);
+	void updateUser(UserBean userBean);
 
-	public UserBean deleteUserById(long userID);
+	UserBean deleteUserById(long userID);
 
-	public UserBean getUserByEmail(String userEmail);
+	UserBean getUserByEmail(String userEmail);
 
 }

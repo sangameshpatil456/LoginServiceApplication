@@ -2,6 +2,7 @@ package com.login.model.security;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -9,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +27,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+	protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain)
 			throws ServletException, IOException {
 		try {
-			if (checkJWTToken(request, response)) {
+			if (checkJWTToken(request)) {
 				Claims claims = validateToken(request);
 				if (claims.get("authorities") != null) {
 					setUpSpringAuthentication(claims);
@@ -41,8 +43,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 			chain.doFilter(request, response);
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized Access");
-			return;
+			Objects.requireNonNull(response).sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized Access");
 		}
 	}
 
@@ -60,7 +61,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	}
 
-	private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
+	private boolean checkJWTToken(HttpServletRequest request) {
 		String authenticationHeader = request.getHeader(Constants.HEADER);
 		if (authenticationHeader == null || !authenticationHeader.startsWith(Constants.PREFIX))
 			return false;
