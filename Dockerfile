@@ -15,7 +15,7 @@
 
 FROM openjdk:8-jdk-alpine
 MAINTAINER Sangamesh Patil
-COPY target/login-service.jar login-service.jar
+COPY target/login-service.jar /login-service.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/login-service.jar"]
 
