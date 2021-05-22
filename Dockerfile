@@ -1,8 +1,26 @@
-FROM openjdk:8-jre-alpine
+# --- Jar file From AWS Ec2 Direct ---
 
-EXPOSE 8080
+#FROM openjdk:8-jdk-alpine
+#MAINTAINER Sangamesh Patil
+#COPY login-service.jar login-service.jar
+#EXPOSE 8080
+#ENTRYPOINT ["java","-jar","/login-service.jar"]
 
-COPY ./build/libs/my-app-1.0-SNAPSHOT.jar /usr/app/
+# --- WAR File ---
+
+#From tomcat:8.0.51-jre8-alpine
+#CMD ["catalina.sh","run"]
+
+# --- Jar File From Target---
+
+FROM openjdk:8-jdk-alpine
+MAINTAINER Sangamesh Patil
+
+COPY ./target/login-service.jar /usr/app
 WORKDIR /usr/app
 
-ENTRYPOINT ["java", "-jar", "my-app-1.0-SNAPSHOT.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","login-service.jar"]
+
+#From tomcat:8.0.51-jre8-alpine
+#CMD ["catalina.sh","run"]
