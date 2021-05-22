@@ -15,9 +15,12 @@
 
 FROM openjdk:8-jdk-alpine
 MAINTAINER Sangamesh Patil
-COPY target/login-service.jar login-service.jar
+
+COPY ./target/login-service.jar /usr/app
+WORKDIR /usr/app
+
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/login-service.jar"]
+ENTRYPOINT ["java","-jar","login-service.jar"]
 
 #From tomcat:8.0.51-jre8-alpine
 #CMD ["catalina.sh","run"]
