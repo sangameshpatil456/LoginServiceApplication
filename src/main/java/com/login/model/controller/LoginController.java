@@ -39,29 +39,28 @@ public class LoginController {
     @Autowired
     private TokenGenerators jwtTokenGenerator;
 
-	private String publicKeysText;
-	private String privateKeysText;
-	private static final String PADDING_TEXT = "RSA/ECB/OAEPWITHSHA-512ANDMGF1PADDING";
+    private String publicKeysText;
+    private String privateKeysText;
+    private static final String PADDING_TEXT = "RSA/ECB/OAEPWITHSHA-512ANDMGF1PADDING";
 
     public LoginController() {
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(4096);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-
             //Converting PublicKey and PrivateKey to String
             publicKeysText = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
             privateKeysText = Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
-
-            log.info(encrypt(publicKeysText, "patil"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String encrypt(String publicKeysText, String planeText) throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
+    @GetMapping("/getEncryptedText")
+    public String encrypt(@RequestParam(name="publicKey",required = true) String publicKeys,
+                          @RequestParam(name="planeText",required = true) String planeText) throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeysText));
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeys));
         RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
 
         Cipher cipher = Cipher.getInstance(PADDING_TEXT);
@@ -71,14 +70,13 @@ public class LoginController {
     }
 
 
-    public String decrypt(String privateKeysText, String encryptedText) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public String decrypt(String privateKeysText, String encryptedText) throws InvalidKeySpecException,NoSuchAlgorithmException,NoSuchPaddingException,InvalidKeyException,IllegalBlockSizeException,BadPaddingException{
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeysText));
-        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-
+        PrivateKey privateKey = null;
+        privateKey = keyFactory.generatePrivate(keySpec);
         Cipher cipher = Cipher.getInstance(PADDING_TEXT);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-
         byte[] decryptedTextArray = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
         return new String(decryptedTextArray);
     }
@@ -100,8 +98,14 @@ public class LoginController {
                 model.addAttribute(Constants.ERROR, "User Not Found");
                 return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.NOT_FOUND);
             }
+            String password = null;
             String token = jwtTokenGenerator.getJWTToken(userBean.getUserId(), userBean.getUserName(), userBean.getUserEmail());
-			String password = decrypt(privateKeysText, loginBean.getPassword());
+            try {
+                password = decrypt(privateKeysText, loginBean.getPassword());
+            }catch (Exception e) {
+                model.addAttribute("error", "Wrong Username and Password");
+                return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.BAD_REQUEST);
+            }
             if (bCryptPasswordEncoder.matches(password, userBean.getPassword())) {
                 model.addAttribute("userId", userBean.getUserId());
                 model.addAttribute("userName", userBean.getUserName());

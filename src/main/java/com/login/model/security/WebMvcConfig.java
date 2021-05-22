@@ -22,7 +22,7 @@ public class WebMvcConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth/login/").permitAll()
-                .antMatchers(HttpMethod.GET, "/auth/getPublicKey").permitAll()
+                .antMatchers(HttpMethod.GET, "/auth/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/user/save").permitAll()
 				.anyRequest().authenticated().and().exceptionHandling().accessDeniedPage("/accessdenied");
 	}
