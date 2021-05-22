@@ -19,7 +19,7 @@ MAINTAINER Sangamesh Patil
 COPY ./target/login-service.jar login-service.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","login-service.jar"]
+ENTRYPOINT ["java","-jar","/login-service.jar"]
 
 #From tomcat:8.0.51-jre8-alpine
 #CMD ["catalina.sh","run"]
