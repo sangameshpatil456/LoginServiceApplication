@@ -123,6 +123,7 @@ SELECT * FROM mysql.user;
 
 
 sudo docker run -d  --name login-service -p 8080:8080  login-service
+sudo docker run -d  --name login-service -p 8080:8080 sangameshpatil/login-service:main-4c0f609
 
 $> docker-compose config
 $> docker-compose up --build
