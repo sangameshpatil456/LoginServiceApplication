@@ -89,6 +89,11 @@ public class LoginController {
         return new ResponseEntity<>(new LoginResponse<>(model), HttpStatus.OK);
     }
 
+    @GetMapping("/version")
+    public String getVersion() {
+        return "Im Running on V01.23.05.2021";
+    }
+
     @PostMapping(value = "login")
     public ResponseEntity<LoginResponse<Model>> loginUser(@RequestBody LoginBean loginBean) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Model model = new Model();
