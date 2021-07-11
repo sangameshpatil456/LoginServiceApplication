@@ -6,7 +6,16 @@ public class LoginBean {
 	private String password;
 	private String userEmail;
 
-	public String getUserName() {
+	public LoginBean() {
+		super();
+	}
+    public LoginBean(String userName, String password, String userEmail) {
+        this.userName = userName;
+        this.password = password;
+        this.userEmail = userEmail;
+    }
+
+    public String getUserName() {
 		return userName;
 	}
 
@@ -26,7 +35,7 @@ public class LoginBean {
 		return userEmail;
 	}
 
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
 }
